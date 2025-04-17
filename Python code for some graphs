@@ -1,0 +1,86 @@
+/////bar chart of the top 5 industries by job growth
+
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Load the Excel file (make sure it's in the same directory or provide the full path)
+file_path = "EMSI_JobChange_UK.xlsx"
+xls = pd.ExcelFile(file_path)
+
+# Load the '1 digit' sheet
+df = xls.parse("1 digit")
+
+# Group by Industry and sum the job change across cities
+industry_growth = df.groupby("Industry")[["Change"]].sum().sort_values(by="Change", ascending=False).head(5).reset_index()
+
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.barplot(data=industry_growth, x="Change", y="Industry", palette="viridis")
+plt.title("Top 5 Industries by Job Growth (UK, 2011–2014)", fontsize=14)
+plt.xlabel("Total Job Change")
+plt.ylabel("Industry")
+plt.grid(axis="x", linestyle="--", alpha=0.6)
+plt.tight_layout()
+
+plt.show()
+
+
+
+//////top 5 industries with the largest job losses between 2011 and 2014 across UK cities
+
+# Get bottom 5 industries by job change (i.e., largest declines)
+industry_loss = df.groupby("Industry")[["Change"]].sum().sort_values(by="Change").head(5).reset_index()
+
+# Plotting
+plt.figure(figsize=(10, 6))
+sns.barplot(data=industry_loss, x="Change", y="Industry", palette="rocket")
+plt.title("Top 5 Industries by Job Loss (UK, 2011–2014)", fontsize=14)
+plt.xlabel("Total Job Change")
+plt.ylabel("Industry")
+plt.grid(axis="x", linestyle="--", alpha=0.6)
+plt.tight_layout()
+
+plt.show()
+
+
+/////top growing industries in London
+
+# Filter for London
+london_df = df[df["City"].str.lower() == "london"]
+
+# Group and sort by job change
+london_growth = london_df.groupby("Industry")[["Change"]].sum().sort_values(by="Change", ascending=False).head(5).reset_index()
+
+# Plot
+plt.figure(figsize=(10, 6))
+sns.barplot(data=london_growth, x="Change", y="Industry", palette="crest")
+plt.title("Top 5 Growing Industries in London (2011–2014)", fontsize=14)
+plt.xlabel("Job Change")
+plt.ylabel("Industry")
+plt.grid(axis="x", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+
+
+///////Top 5 Job-Losing Industries in Manchester
+
+# Filter for Manchester
+manchester_df = df[df["City"].str.lower() == "manchester"]
+
+# Group and sort by job change
+manchester_loss = manchester_df.groupby("Industry")[["Change"]].sum().sort_values(by="Change").head(5).reset_index()
+
+# Plot
+plt.figure(figsize=(10, 6))
+sns.barplot(data=manchester_loss, x="Change", y="Industry", palette="flare")
+plt.title("Top 5 Industries with Job Loss in Manchester (2011–2014)", fontsize=14)
+plt.xlabel("Job Change")
+plt.ylabel("Industry")
+plt.grid(axis="x", linestyle="--", alpha=0.6)
+plt.tight_layout()
+plt.show()
+
+
